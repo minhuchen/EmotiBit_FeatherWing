@@ -846,3 +846,26 @@ uint8_t EmotiBitWiFi::getMaxNumCredentialAllowed()
 {
 	return MAX_CREDENTIALS;
 }
+
+#if ENABLE_EVT_MARKER
+void EmotiBitWiFi::getIncomingDataPackets(String &packets, uint16_t &counter)
+{
+	// copied from processTimeSync
+	// TODO: refactor to remove duplicate code in multiple places
+	if (_isConnected) {
+		String msg;
+		EmotiBitPacket::Header header;
+		int8_t status;
+		int16_t dataStartChar;
+
+		//makes sure no old messages are in the read buffer
+		status = readUdp(_dataCxn, msg);
+		while (status == SUCCESS) {
+			dataStartChar = EmotiBitPacket::getHeader(msg, header);
+			packets += EmotiBitPacket::createPacket(header.typeTag, counter++,
+				msg.substring(dataStartChar, msg.length() - 1), header.dataLength);
+			status = readUdp(_dataCxn, msg);
+		}
+	}
+}
+#endif

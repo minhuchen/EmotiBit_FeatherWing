@@ -1713,6 +1713,14 @@ uint8_t EmotiBit::update()
 	_emotiBitWiFi.update(inSyncPackets, _outDataPacketCounter);
 	_outDataPackets += inSyncPackets;
 	inSyncPackets = "";
+
+	
+#if ENABLE_EVT_MARKER
+	static String tpackets;
+	_emotiBitWiFi.getIncomingDataPackets(tpackets, _outDataPacketCounter);
+	_outDataPackets += tpackets;
+	tpackets = "";
+#endif
 	
 	// Process incoming controll packets
 	static String inControlPackets;

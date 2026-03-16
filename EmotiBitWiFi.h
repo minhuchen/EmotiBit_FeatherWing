@@ -42,6 +42,8 @@
 #include "EmotiBitComms.h"
 #include "EmotiBitPacket.h"
 
+#define ENABLE_EVT_MARKER		1
+
 class EmotiBitWiFi {
 public:
 	struct Credential
@@ -173,4 +175,8 @@ public:
 	 * @return NAX_CREDENTIAL
 	 */
 	static uint8_t getMaxNumCredentialAllowed();
+
+	#if ENABLE_EVT_MARKER
+	void getIncomingDataPackets(String &packets, uint16_t &counter);
+	#endif
 };
